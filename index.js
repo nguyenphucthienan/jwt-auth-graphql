@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 require('./models/User');
 require('./services/passportLocal');
+require('./services/passportJwt');
 const config = require('./config');
 
 mongoose.Promise = global.Promise;
