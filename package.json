@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/nguyenphucthienan/JWTAuthGraphQL/issues"
   },
-  "homepage": "https://github.com/nguyenphucthienan/JWTAuthGraphQL#readme"
+  "homepage": "https://github.com/nguyenphucthienan/JWTAuthGraphQL#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
 }
