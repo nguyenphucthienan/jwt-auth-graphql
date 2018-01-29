@@ -1,6 +1,11 @@
-const { GraphQLObjectType } = require('graphql');
+const {
+  GraphQLObjectType,
+  GraphQLList
+} = require('graphql');
 const UserType = require('./UserType');
 const SecretDataType = require('./SecretDataType');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 const AuthenticationService = require('../../services/authentication');
 
 const RootQueryType = new GraphQLObjectType({
@@ -10,6 +15,19 @@ const RootQueryType = new GraphQLObjectType({
       type: UserType,
       resolve(parentValue, args, context) {
         return AuthenticationService.requireJwtAuth(context);
+      }
+    },
+    users: {
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args, context) {
+        return AuthenticationService.requireJwtAuth(context)
+          .then((user, err) => {
+            if (user) {
+              return User.find({});
+            }
+
+            return null;
+          });
       }
     },
     secret: {
