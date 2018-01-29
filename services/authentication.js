@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 
@@ -33,4 +34,21 @@ function register({ username, password, context }) {
     });
 }
 
-module.exports = { register };
+function requireLocalAuth({ username, password, context }) {
+  return new Promise((resolve, reject) => {
+    passport.authenticate('local', { session: false }, (err, user) => {
+      if (err) {
+        reject(new Error('Error', err));
+      }
+
+      if (!user) {
+        reject(new Error('Incorrect username and/or password'));
+      }
+
+      user.token = generateToken(user);
+      resolve(user);
+    })({ body: { username, password } });
+  });
+}
+
+module.exports = { register, requireLocalAuth };

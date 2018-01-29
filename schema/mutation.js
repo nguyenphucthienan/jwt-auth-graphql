@@ -18,6 +18,16 @@ const mutation = new GraphQLObjectType({
         return AuthenticationService.register({ username, password, context });
       }
     },
+    login: {
+      type: UserType,
+      args: {
+        username: { type: GraphQLString },
+        password: { type: GraphQLString }
+      },
+      resolve(parentValue, { username, password }, context) {
+        return AuthenticationService.requireLocalAuth({ username, password, context });
+      }
+    },
     logout: {
       type: UserType,
       resolve(parentValue, args, context) {
