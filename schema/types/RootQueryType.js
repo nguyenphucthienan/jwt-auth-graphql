@@ -1,5 +1,6 @@
 const { GraphQLObjectType } = require('graphql');
 const UserType = require('./UserType');
+const SecretDataType = require('./SecretDataType');
 const AuthenticationService = require('../../services/authentication');
 
 const RootQueryType = new GraphQLObjectType({
@@ -9,6 +10,19 @@ const RootQueryType = new GraphQLObjectType({
       type: UserType,
       resolve(parentValue, args, context) {
         return AuthenticationService.requireJwtAuth(context);
+      }
+    },
+    secret: {
+      type: SecretDataType,
+      resolve(parentValue, args, context) {
+        return AuthenticationService.requireJwtAuth(context)
+          .then((user, err) => {
+            if (user) {
+              return { secret: 'SECRET_DATA' };
+            }
+
+            return null;
+          });
       }
     }
   }
