@@ -1,5 +1,6 @@
 const { GraphQLObjectType } = require('graphql');
 const UserType = require('./UserType');
+const AuthenticationService = require('../../services/authentication');
 
 const RootQueryType = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -7,7 +8,7 @@ const RootQueryType = new GraphQLObjectType({
     user: {
       type: UserType,
       resolve(parentValue, args, context) {
-        return context.user;
+        return AuthenticationService.requireJwtAuth(context);
       }
     }
   }

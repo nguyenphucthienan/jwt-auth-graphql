@@ -51,4 +51,20 @@ function requireLocalAuth({ username, password, context }) {
   });
 }
 
-module.exports = { register, requireLocalAuth };
+function requireJwtAuth(context) {
+  return new Promise((resolve, reject) => {
+    passport.authenticate('jwt', { session: false }, (err, user) => {
+      if (err) {
+        reject(new Error('Error', err));
+      }
+
+      if (!user) {
+        reject(new Error('You do not have permission to do this'));
+      }
+
+      resolve(user);
+    })(context);
+  });
+}
+
+module.exports = { register, requireLocalAuth, requireJwtAuth };
