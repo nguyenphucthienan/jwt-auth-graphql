@@ -14,7 +14,15 @@ const RootQueryType = new GraphQLObjectType({
     user: {
       type: UserType,
       resolve(parentValue, args, context) {
-        return AuthenticationService.requireJwtAuth(context);
+        return AuthenticationService.requireJwtAuth(context)
+          .then((user, err) => {
+            if (user) {
+              return user;
+            }
+
+            return null;
+          })
+          .catch(err => null);
       }
     },
     users: {
@@ -27,7 +35,8 @@ const RootQueryType = new GraphQLObjectType({
             }
 
             return null;
-          });
+          })
+          .catch(err => null);
       }
     },
     secret: {
@@ -40,7 +49,8 @@ const RootQueryType = new GraphQLObjectType({
             }
 
             return null;
-          });
+          })
+          .catch(err => null);
       }
     }
   }
